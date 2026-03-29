@@ -49,9 +49,10 @@ export default function App() {
   const pct = Math.round(((memAyahs + partialAyahs) / (totalAyahs * 2)) * 100 * 2);
   const clampedPct = Math.min(pct, 100);
 
-  // Juz 30 surahs are 78-114
-  const juz30Mem = SURAHS.filter(s => s.juz === 30 && prog[s.n]?.status === "memorised").length;
-  const juz30Total = SURAHS.filter(s => s.juz === 30).length;
+  // Juz stat — reflects selected juz filter, defaults to Juz 30
+  const activeJuz = juzFilter === "all" ? 30 : Number(juzFilter);
+  const juzStatMem = SURAHS.filter(s => s.juz === activeJuz && prog[s.n]?.status === "memorised").length;
+  const juzStatTotal = SURAHS.filter(s => s.juz === activeJuz).length;
 
   const filtered = SURAHS.filter(s => {
     const st = prog[s.n]?.status || "not_started";
@@ -202,7 +203,7 @@ export default function App() {
             { label: "Overall Progress", value: `${clampedPct}%`, sub: `${memAyahs} / ${totalAyahs} ayahs`, color: "#27ae60" },
             { label: "Memorised", value: memSurahs, sub: `of 114 surahs`, color: "#1abc9c" },
             { label: "In Progress", value: inProgSurahs, sub: "surahs active", color: "#f39c12" },
-            { label: "Juz 30", value: `${juz30Mem} / ${juz30Total}`, sub: "surahs memorised", color: "#3498db" },
+            { label: `Juz ${activeJuz}`, value: `${juzStatMem} / ${juzStatTotal}`, sub: "surahs memorised", color: "#3498db" },
           ].map(st => (
             <div key={st.label} style={S.card}>
               <div style={S.statLabel}>{st.label}</div>
